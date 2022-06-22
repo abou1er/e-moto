@@ -75,6 +75,27 @@ app.post('/', async (req, res) => {
 
 })
 
+
+// get by permis or not µµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµ
+
+app.get('/vehicules', async (req, res) => { //app.get('/je choisie le nom de route ou lee type de recherche trouvait devra apparaitre !!!!!! ce nom de route sera à reporté dans la requete.service coté front ',   !!!!!!   POUR EVITER BUG CONFRONTATION AVEC ID PLACE LENSEMBLE CETTE METHODE APP.GET AVANT CELLE QUI ON BESOIN D'ID
+
+    // UNE CONSTANTE QUE JE RECUP DANS MA REQUETE (req) grâce au query
+    const permisbodyreq = req.query.permis
+// je fais une recherche find by (par critere) dans mon objet 
+    const vehicules = await Emoto.find({
+        permis :permisbodyreq
+    })
+// j'envoie la reponse qui figure dans POSTMAN
+    await res.json(vehicules)
+})
+
+
+
+// **********************************
+
+
+
 app.get('/', async (req, res) => {
     const emotos = await Emoto.find()
     await res.json(emotos)
@@ -107,7 +128,6 @@ app.patch('/:id', async (req, res) => {
     const equivalentbody = req.body.equivalent
     const urlImagebody = req.body.urlImage
 
-
     // on vérifie maintenant si les valeurs sont remplies, si elles le sont on modifie l'ancienne valeure par la nouvelle
 
     if (titrebody) {
@@ -137,3 +157,51 @@ app.patch('/:id', async (req, res) => {
     res.json(emoto)
 
 })
+
+
+
+
+// test PUT
+// app.put('/:id', async (req, res) => {
+//     const id = req.params.id
+//     const emoto = await Emoto.findOne({ _id: id }) // on récupere le voiture pour pouvoir le modifier
+
+//     // on récupère les valeurs potentiellement modifiées
+//     const titrebody = req.body.titre; // récupération des variables du body
+//     const autonomiebody = req.body.autonomie
+//     const permisbody = req.body.permis
+//     const prixbody = req.body.prix
+//     const puissancebody = req.body.puissance
+//     const equivalentbody = req.body.equivalent
+//     const urlImagebody = req.body.urlImage
+
+
+//     // on vérifie maintenant si les valeurs sont remplies, si elles le sont on modifie l'ancienne valeure par la nouvelle
+
+//     if (titrebody) {
+//         emoto.titre = titrebody
+//     }
+//     if (autonomiebody) {
+//         emoto.autonomie = autonomiebody
+//     }
+//     if (permisbody) {
+//         emoto.permis = permisbody
+//     }
+//     if (prixbody) {
+//         emoto.prix = prixbody
+//     }
+//     if (puissancebody) {
+//         emoto.puissance = puissancebody
+//     }
+//     if (equivalentbody) {
+//         emoto.equivalent = equivalentbody
+//     }
+//     if (urlImagebody) {
+//         emoto.urlImage = urlImagebody
+//     }
+
+//     await emoto.save() // on sauvegarde les modifications
+
+//     res.json(emoto)
+
+// })
