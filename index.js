@@ -15,7 +15,7 @@ app.listen(port, () => {
 
 mongoose.connect(
     'mongodb+srv://abou:1234@cluster0.vn3vc.mongodb.net/emoto?retryWrites=true&w=majority'
-    ,err => {
+    , err => {
         if (err) throw 'erreur est : ', err;
         console.log('connected to MongoDB')
     });
@@ -48,6 +48,23 @@ app.use(express.json()) //autorise utilisation format json
 app.use(express.urlencoded({ extended: false }));
 
 
+// ****************** filtre par prix **********************************
+
+app.get('/byPrice', async (req, res) => {
+    let min = req.query.min;   //query indique que la valeur à comparer/prendre en compte sera après le point d'intérogation
+    let max = req.query.max;
+
+    const dataRecup = await Emoto.find({ prix: { $gte: min, $lte: max } });
+                                        //$gt: plus grand que,  $lt: plus petit que
+    res.json(dataRecup);
+    //renvoi ce qui a été recup
+});
+
+// µµµµµµµµµµµµµµµµµµµµµµµµµ fin    *****************************************
+
+
+
+
 app.post('/', async (req, res) => {
     const titrebody = req.body.titre; // récupération des variables du body
     const autonomiebody = req.body.autonomie
@@ -66,7 +83,7 @@ app.post('/', async (req, res) => {
         puissance: puissancebody,
         equivalent: equivalentbody,
         urlImage: urlImagebody,
-    
+
     })
 
     await nouveau_emoto.save() // sauvegarde asynchrone du nouveau emoto
@@ -82,17 +99,16 @@ app.get('/vehicules', async (req, res) => { //app.get('/je choisie le nom de rou
 
     // UNE CONSTANTE QUE JE RECUP DANS MA REQUETE (req) grâce au query
     const permisbodyreq = req.query.permis
-// je fais une recherche find by (par critere) dans mon objet 
+    // je fais une recherche find by (par critere) dans mon objet 
     const vehicules = await Emoto.find({
-        permis :permisbodyreq
+        permis: permisbodyreq
     })
-// j'envoie la reponse qui figure dans POSTMAN
+    // j'envoie la reponse qui figure dans POSTMAN
     await res.json(vehicules)
 })
 
-
-
 // **********************************
+
 
 
 
@@ -103,14 +119,14 @@ app.get('/', async (req, res) => {
 
 app.get('/:id', async (req, res) => {
     const id = req.params.id
-    const emoto = await Emoto.findOne({_id : id})
+    const emoto = await Emoto.findOne({ _id: id })
     res.json(emoto)
 })
 
-app.delete('/:id', async(req, res) => {
+app.delete('/:id', async (req, res) => {
     const id = req.params.id
-    const suppr = await Emoto.deleteOne({_id : id})
-    res.json(suppr) 
+    const suppr = await Emoto.deleteOne({ _id: id })
+    res.json(suppr)
 })
 
 
