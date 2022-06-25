@@ -1,5 +1,6 @@
 const express = require('express');
 const { default: mongoose } = require('mongoose');
+const { schema } = require('./emoto');
 let app = express();
 let port = 3333;
 
@@ -108,6 +109,36 @@ app.get('/vehicules', async (req, res) => { //app.get('/je choisie le nom de rou
 })
 
 // **********************************
+
+
+
+// **********************************
+// get by mot clé *******************************************
+
+app.get('/keyWord', async (req, res) => { //app.get('/je choisie le nom de route ou lee type de recherche trouvait devra apparaitre !!!!!! ce nom de route sera à reporté dans la requete.service coté front ',   !!!!!!   POUR EVITER BUG CONFRONTATION AVEC ID PLACE LENSEMBLE CETTE METHODE APP.GET AVANT CELLE QUI ON BESOIN D'ID
+
+    // UNE CONSTANTE QUE JE RECUP DANS MA REQUETE (req) grâce au query
+    const param = req.query.motCles 
+    // je fais une recherche find (par critere) dans mon objet 
+    const keyWord = await Emoto.find({
+        $or: [
+            { 'permis': new RegExp(param , 'i' )},
+            { 'titre': new RegExp(param , 'i' )},
+            // { 'equivalent': new RegExp(param , 'i' )},
+        ]
+    
+    })
+    // j'envoie la reponse qui figure dans POSTMAN
+    await res.json(keyWord)
+
+    console.log("bodyreq = " , param);
+    console.log(" /*/*/*/*/*/*/*/*/*/*/*/********++++++++++++++++++++55555555555/**/*/*/*/*/*/*/" );
+    console.log("keyWord = " , keyWord);
+})
+
+// **********************************
+
+
 
 
 
